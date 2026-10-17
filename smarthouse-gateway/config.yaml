@@ -1,0 +1,59 @@
+# Дополнение Smart House Gateway, канал stable (docs/addon.md). Публикуется в репозиторий дополнений
+# https://addons.smart-house.by/hub скриптом scripts/publish-addon.ps1; бета — ../smarthouse-gateway-beta (то же, кроме
+# name, slug, description, version, stage). Формат — один ключ на строку, списки через «- », значения без переносов: его
+# проверяет tests/SmartHouse.Gateway.Tests/AddonOptionsTests.cs.
+name: Smart House Gateway
+version: "0.1.0"
+slug: smarthouse_gateway
+description: Служба Smart House на хабе — API и живые обновления для приложения
+url: https://smart-house.by
+# Только amd64, пока в комплекте нет хаба на ARM; aarch64 publish-addon.ps1 умеет собрать (-Arch amd64,aarch64).
+arch:
+  - amd64
+# Готовый образ из нашего реестра, тег = version. {arch} Supervisor заменяет архитектурой хаба.
+image: registry.smart-house.by/smarthouse/gateway-{arch}
+# Gateway сам главный процесс контейнера (run.sh → exec dotnet), init Docker не нужен.
+init: false
+startup: application
+boot: auto
+# Сторож Supervisor: /api/health отвечает 200, пока процесс жив, даже без связи с ядром; не ответил — перезапуск.
+watchdog: http://[HOST]:[PORT:5080]/api/health
+# Ядро — ws://supervisor/core/websocket с SUPERVISOR_TOKEN.
+homeassistant_api: true
+# REST Supervisor (http://supervisor): адреса хаба в сети, версии, копии системы, сторож Zigbee2MQTT.
+hassio_api: true
+# manager — наименьшая роль, с которой дополнение может запустить Zigbee2MQTT (/addons/<slug>/start) и включить его сторож
+# (/addons/<slug>/options); default пускает только к /…/info, backup — ещё к /backups. Путь через ядро (supervisor/api по
+# WebSocket) из дополнения закрыт: прокси Supervisor отвечает unauthorized на supervisor/* и hassio/*. Цена — оценка
+# безопасности 5 → 4.
+hassio_role: manager
+# Горячая копия: Gateway не останавливается. Живую базу копия не берёт (её файлы меняются на ходу) — перед копией
+# backup_pre делает согласованный снимок backups/system-snapshot.db (VACUUM INTO), а Gateway, восстановленный без
+# gateway.db, начинает с самой свежей копии из backups/. Закрытый ключ туннеля keys/tunnel.key в копию не берём (ADR 0004,
+# docs/hub.md §13): утечка копии не даёт клона хаба; хаб, восстановленный из копии, делает новый ключ, а поддержка
+# подтверждает его командой hubs rekey.
+backup: hot
+backup_pre: dotnet /app/SmartHouse.Gateway.dll snapshot-db
+backup_exclude:
+  - "*/gateway.db"
+  - "*/gateway.db-wal"
+  - "*/gateway.db-shm"
+  - "*/gateway.db.restoring"
+  - "*/keys/tunnel.key"
+  - "*.tmp"
+ports:
+  5080/tcp: 5080
+ports_description:
+  5080/tcp: API и живые обновления для приложения
+# /config внутри дополнения — /addon_configs/<slug> на хабе: файл дома монтажника homes/home.json и его документы.
+map:
+  - app_config:rw
+options:
+  home_config: /config/homes/home.json
+  zigbee_watchdog: true
+schema:
+  home_config: str
+  factory_key: password?
+  zigbee_addon: str?
+  zigbee_watchdog: bool
+  log_level: list(debug|info|warning|error)?

@@ -1,0 +1,6 @@
+# Репозиторий дополнений Smart House (docs/addon.md). Корень публичного репозитория GitHub, который Caddy отдаёт как
+# https://addons.smart-house.by/hub (deploy/cloud/sites/addons.caddy): только этот файл и манифесты дополнений, без кода.
+# Адрес выбирается один раз — от него зависит slug дополнения на хабах, а от slug — их /data и копии.
+name: Smart House
+url: https://addons.smart-house.by/hub
+maintainer: Smart House

@@ -1,0 +1,18 @@
+configuration:
+  home_config:
+    name: Home file
+    description: The installer's home configuration. Without it the home starts empty and is filled from the app.
+  factory_key:
+    name: Factory key
+    description: Workshop only, until the hub is sealed. Normally empty.
+  zigbee_addon:
+    name: Zigbee2MQTT add-on
+    description: The add-on's slug when it is not the standard one. Normally empty.
+  zigbee_watchdog:
+    name: Bring Zigbee2MQTT back
+    description: The hub starts Zigbee2MQTT by itself when it is down. Switch off only for maintenance.
+  log_level:
+    name: Log level
+    description: debug, info, warning or error. Normally empty (info).
+network:
+  5080/tcp: API and live updates for the app

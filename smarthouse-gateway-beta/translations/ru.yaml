@@ -1,0 +1,18 @@
+configuration:
+  home_config:
+    name: Файл дома
+    description: Конфигурация дома от монтажника. Нет файла — пустой дом, его наполняют из приложения.
+  factory_key:
+    name: Заводской ключ
+    description: Только для мастерской, до запечатывания хаба. Обычно пусто.
+  zigbee_addon:
+    name: Дополнение Zigbee2MQTT
+    description: Slug дополнения, если не стандартный. Обычно пусто.
+  zigbee_watchdog:
+    name: Поднимать Zigbee2MQTT
+    description: Хаб сам запускает упавший Zigbee2MQTT. Выключать только на время обслуживания.
+  log_level:
+    name: Подробность журнала
+    description: debug, info, warning или error. Обычно пусто (info).
+network:
+  5080/tcp: API и живые обновления для приложения
