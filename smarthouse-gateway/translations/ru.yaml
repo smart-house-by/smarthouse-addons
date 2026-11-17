@@ -14,5 +14,8 @@ configuration:
   log_level:
     name: Подробность журнала
     description: debug, info, warning или error. Обычно пусто (info).
+  env:
+    name: Флаги хаба
+    description: Строки Раздел__Ключ=значение для Butler, ButlerRelay, ButlerWeather, SatelliteClients, Voice, Zigbee, Oura, Recovery, Reminders, DevicePairing, Logging. Секреты — только файлом …File=/config/secrets/<файл>. Обычно пусто.
 network:
   5080/tcp: API и живые обновления для приложения

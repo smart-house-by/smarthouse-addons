@@ -3,7 +3,7 @@
 # только name, slug, description, version и stage (проверяет tests/SmartHouse.Gateway.Tests/AddonOptionsTests.cs). Порт
 # тот же — вместе со stable на одном хабе не ставить.
 name: Smart House Gateway (бета)
-version: "0.2.0"
+version: "0.3.0"
 slug: smarthouse_gateway_beta
 description: Бета службы Smart House — только для тестовых хабов
 url: https://smart-house.by
@@ -49,12 +49,16 @@ ports_description:
 # /config внутри дополнения — /addon_configs/<slug> на хабе: файл дома монтажника homes/home.json и его документы.
 map:
   - app_config:rw
+# env — флаги хаба строками «Раздел__Ключ=значение» (docs/addon.md §1.3): только разрешённые разделы, секреты — файлом в
+# /config/secrets/ (…File=/config/secrets/…), не значением. Необязательна: пустой список — флагов нет.
 options:
   home_config: /config/homes/home.json
   zigbee_watchdog: true
+  env: []
 schema:
   home_config: str
   factory_key: password?
   zigbee_addon: str?
   zigbee_watchdog: bool
   log_level: list(debug|info|warning|error)?
+  env: ["str?"]

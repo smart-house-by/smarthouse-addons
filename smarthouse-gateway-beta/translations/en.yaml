@@ -14,5 +14,8 @@ configuration:
   log_level:
     name: Log level
     description: debug, info, warning or error. Normally empty (info).
+  env:
+    name: Hub flags
+    description: Lines Section__Key=value for Butler, ButlerRelay, ButlerWeather, SatelliteClients, Voice, Zigbee, Oura, Recovery, Reminders, DevicePairing, Logging. Secrets only as files …File=/config/secrets/<file>. Normally empty.
 network:
   5080/tcp: API and live updates for the app
